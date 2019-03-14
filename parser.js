@@ -18,5 +18,5 @@ xml = xml.slice(3).toString('utf8');
 let testData1 = convert.xml2json(xml, {compact: true, spaces: 2});
 // //const result2 = convert.xml2json(xml, {compact: false, spaces: 4});
 //console.log(testData, "this is text");
-let testData = testData1;
+let testData = JSON.parse(testData1);
 module.exports = testData;

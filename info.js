@@ -1,5 +1,5 @@
 var testData = require('./parser.js');
 
-var x = JSON.parse(testData);
+//var x = JSON.parse(testData);
 
-console.log(x.ClinicalDocument.realmCode);
+console.log(testData.ClinicalDocument.realmCode);
