@@ -1,0 +1,23 @@
+{
+  "name": "ehx",
+  "version": "1.0.0",
+  "description": "ehx tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "fast-xml-parser": "^3.12.14",
+    "mocha": "^6.0.2"
+  },
+  "dependencies": {
+    "concat-stream": "^2.0.0",
+    "remove-bom-stream": "^1.2.0",
+    "strip-bom": "^3.0.0",
+    "strip-bom-stream": "^3.0.0",
+    "xml-js": "^1.6.11"
+  }
+}
