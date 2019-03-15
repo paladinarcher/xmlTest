@@ -45,15 +45,17 @@ describe('CCD1.1', function () {
             });
         });
         describe('entry tags', function() {
-            let groupNum = mappingSection.text.Container.MemberEnrollments.InsuredGroupOrPolicyNumber._text;
+            let groupNum = mappingSection.text.Container.MemberEnrollments.MemberEnrollment[0].InsuredGroupOrPolicyNumber._text;
             let exists = false;
             payersSection.entry.forEach(function(entry) {
-                let erid = entry.entryRelationship.act.id;
+                let erid = entry.act.entryRelationship.act.id;
                 if (erid._attributes.root == '2.16.840.1.113883.4.349' && erid._attributes.extension == groupNum) {
                     exists = true;
                 }
             });
-            expect(exists).to.be.equal(1, 'Group number must be defined in the enries');
+            it('should have at least one entry that has group number assigned in id tag', function () {
+                expect(exists).to.be.true;
+            });
         });
     });
 });
