@@ -47,11 +47,27 @@ describe('CCD1.1', function () {
         describe('entry tags', function() {
             let groupNum = mappingSection.text.Container.MemberEnrollments.MemberEnrollment[0].InsuredGroupOrPolicyNumber._text;
             let exists = false;
+            let entryNum = 1;
             payersSection.entry.forEach(function(entry) {
+                let statusCode = entry.act.statusCode._attributes.code;
                 let erid = entry.act.entryRelationship.act.id;
                 if (erid._attributes.root == '2.16.840.1.113883.4.349' && erid._attributes.extension == groupNum) {
                     exists = true;
                 }
+                describe('entry number '+entryNum, function() {
+                    it('Each entry should have the code attribute of the statusCode tag set to completed', function() {
+                        expect(statusCode).to.be.equal('completed','The code attribute of the statusCode tag is not set to completed');
+                    });
+                    it('Each entry should have the value attribute on the enrty/act/entryRelationship/act/effectiveTime/low tag be filled in', function() {
+                        let lowTime = enrty.act.entryRelationship.act.effectiveTime.low._attributes.value;
+                        expect(lowTime).to.not.be.null;
+                    });
+                    it('Each entry should have the value attribute on the enrty/act/entryRelationship/act/effectiveTime/high tag be filled in', function() {
+                        let highTime = enrty.act.entryRelationship.act.effectiveTime.high._attributes.value;
+                        expect(highTime).to.not.be.null;
+                    });
+                });
+                entryNum++;
             });
             it('should have at least one entry that has group number assigned in id tag', function () {
                 expect(exists).to.be.true;
