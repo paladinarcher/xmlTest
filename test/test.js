@@ -59,11 +59,11 @@ describe('CCD1.1', function () {
                         expect(statusCode).to.be.equal('completed','The code attribute of the statusCode tag is not set to completed');
                     });
                     it('Each entry should have the value attribute on the enrty/act/entryRelationship/act/effectiveTime/low tag be filled in', function() {
-                        let lowTime = enrty.act.entryRelationship.act.effectiveTime.low._attributes.value;
+                        let lowTime = entry.act.entryRelationship.act.effectiveTime.low._attributes.value;
                         expect(lowTime).to.not.be.null;
                     });
                     it('Each entry should have the value attribute on the enrty/act/entryRelationship/act/effectiveTime/high tag be filled in', function() {
-                        let highTime = enrty.act.entryRelationship.act.effectiveTime.high._attributes.value;
+                        let highTime = entry.act.entryRelationship.act.effectiveTime.high._attributes.value;
                         expect(highTime).to.not.be.null;
                     });
                 });
