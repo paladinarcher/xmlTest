@@ -91,7 +91,6 @@ describe('CCD1.1', function () {
 
       // represented Organization
       describe('Represented Organization', function() {
-        
         // id -root
         it('should have the correct code attribute for the represented Organization id root', function(){
           let facilityNumber = allergySection.entry[0].act.author.assignedAuthor.representedOrganization.id._attributes.root;
@@ -115,7 +114,6 @@ describe('CCD1.1', function () {
 
       // Allergy Intolerance Obsevation 
       describe('Allergy Intolerance Obsevation', function() {
-
         // entryRelationship
         it('should have the correct code attribute for the Allergy Intolerance Obsevation entryRelationship', function(){
           let entryRelationship = allergySection.entry[0].act.entryRelationship._attributes.typeCode;
@@ -143,7 +141,6 @@ describe('CCD1.1', function () {
 
       // Allergy observation id
       describe('Allergy Intolerance Obsevation', function() {
-
         // id
         it('should have the correct code attribute for the Allergy observation id', function(){
           let id = allergySection.entry[0].act.entryRelationship.observation.id._attributes.nullFlavor;
@@ -181,7 +178,6 @@ describe('CCD1.1', function () {
 
        // Product & Product Detail
       describe('Product & Product Detail', function() {
-
         // typeCode
         it('should have the correct code attribute for the product & product participant typeCode', function(){
           let typeCode = allergySection.entry[0].act.entryRelationship.observation.participant._attributes.typeCode;
@@ -194,17 +190,65 @@ describe('CCD1.1', function () {
           expect(classCode).to.be.equal('MANU', `The Product & Product participantRole classCode attribute classCode does not match!`);
           });
 
-        // classCode
-        it('should have the correct code attribute for the product & product detail playingEntity classCode', function(){
-          let classCode = allergySection.entry[0].act.entryRelationship.observation.participant.participantRole.playingEntity._attributes.classCode;
-          expect(classCode).to.be.equal('MMAT', `The Product & Product code attribute playingEntity classCode does not match!`);
-          });
+          // classCode
+          it('should have the correct code attribute for the product & product detail playingEntity classCode', function(){
+            let classCode = allergySection.entry[0].act.entryRelationship.observation.participant.participantRole.playingEntity._attributes.classCode;
+            expect(classCode).to.be.equal('MMAT', `The Product & Product code attribute playingEntity classCode does not match!`);
+            });
+        }); // end of product & Product Detail
 
-      }); // end of product & Product Detail
-
-
+        // Test Needed for Allergen Product 
 
     }); // end of Information Source for Allergy
+
+    // Test Needed for Product Free-Text
+
+    // Reaction Observation
+    describe('Reaction Observation', function() {
+      // inversionInd
+      it('should have the correct code attribute for the reaction observation code attribute inversionInd', function(){
+        let inversionInd = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0]._attributes.inversionInd;
+        expect(inversionInd).to.be.equal('true', `The reaction observation code attribute inversionInd  does not match!`);
+        });
+
+      // typeCode
+      it('should have the correct code attribute for the reaction observation code attribute typeCode', function(){
+        let typeCode = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0]._attributes.typeCode;
+        expect(typeCode).to.be.equal('MFST', `The reaction observation code attribute typeCode does not match!`);
+        });
+
+      // templatedID root
+      it('should have the correct code attribute for the reaction observation code attribute root', function(){
+        let root = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0].observation.templateId._attributes.root;
+        expect(root).to.be.equal('2.16.840.1.113883.10.20.22.4.9', `The reaction observation code  template id attribute root does not match!`);
+        });
+
+      // Reaction Observation id
+      describe('Reaction Observation id', function() {
+        // id
+        it('should have the correct code attribute for the reaction observation code id attribute nullFlavor', function(){
+          let nullFlavor = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0].observation.id._attributes.nullFlavor;
+          expect(nullFlavor).to.be.equal('UNK', `The reaction observation code id attribute nullFlavor does not match!`);
+          });
+      }); // end of id
+
+      // Reaction Observation code
+      describe('Reaction Observation code', function() {
+        // code
+        it('should have the correct code attribute for the reaction observation code attribute code', function(){
+          let code = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0].observation.code._attributes.code;
+          expect(code).to.be.equal('ASSERTION', `The reaction observation code attribute code does not match!`);
+          });
+
+        // codeSystem
+
+        // codeSystemName
+
+
+
+      });// end of code
+
+    }); // end of Reaction Observation
 
   });
 });
