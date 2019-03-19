@@ -44,22 +44,53 @@ describe('CCD1.1', function () {
             });
         });
         describe('entry tags', function() {
-            let groupNum = mappingSection.text.Container.MemberEnrollments.MemberEnrollment[0].InsuredGroupOrPolicyNumber._text;
+            let memberEnrollments = mappingSection.text.Container.MemberEnrollments.MemberEnrollment;
+            memberEnrollments.reverse();
             let exists = false;
             let entryNum = 1;
             payersSection.entry.forEach(function(entry) {
-                let insuredRelationship = mappingSection.text.Container.MemberEnrollments.MemberEnrollment[entryNum-1].HealthFund.InsuredRelationship.Description._text;
-                let membershipNumber = mappingSection.text.Container.MemberEnrollments.MemberEnrollment[entryNum-1].HealthFund.MembershipNumber._text;
+                let groupNum = memberEnrollments[entryNum-1].InsuredGroupOrPolicyNumber;
+                if(groupNum) { groupNum = groupNum._text; }
+                let insuredRelationship = memberEnrollments[entryNum-1].HealthFund.InsuredRelationship.Description;
+                if(insuredRelationship) { insuredRelationship = insuredRelationship._text; }
+                let membershipNumber = memberEnrollments[entryNum-1].HealthFund.MembershipNumber;
+                if(membershipNumber) { membershipNumber = membershipNumber._text; }
+                let insuranceType = memberEnrollments[entryNum-1].InsuranceTypeOrProductCode;
+                let organizationName = memberEnrollments[entryNum-1].EnteredAt;
                 let statusCode = entry.act.statusCode._attributes.code;
-                let erid = entry.act.entryRelationship.act.id;
-                if (erid._attributes.root == '2.16.840.1.113883.4.349' && erid._attributes.extension == groupNum) {
-                    exists = true;
-                }
+                let erid = entry.act.entryRelationship.act.id._attributes;
                 describe('entry number '+entryNum, function() {
-                    it('Each entry should have the code attribute of the statusCode tag set to completed', function() {
+                    it('Each entry should have the extension attribute of the entry/act/entryRelationship/act/id tag set to the groupNum', function() {
+                        expect(erid.extension).to.exist.and.be.equal(groupNum, 'The extension attribute of the entryRelationship/act/id tag is not set to the group number');
+                    });
+                    it('Each entry should have the root attribute of the entry/act/entryRelationship/act/id tag set correctly', function() {
+                        expect(erid.root).to.be.equal('2.16.840.1.113883.4.349', 'The root attribute of the entryRelationship/act/id tag is not set correctly');
+                    });
+                    it('Each entry should have the code attribute of the entry/act/entryRelationship/act/statusCode tag set to completed', function() {
                         expect(statusCode).to.be.equal('completed','The code attribute of the statusCode tag is not set to completed');
                     });
-                    describe('entry/act/entryRelationship/act/effectiveTie tag', function() {
+                    describe('entry/act/entryRelationship/act/code tag', function() {
+                        let code = entry.act.entryRelationship.act.code._attributes;
+                        if(insuranceType && insuranceType.Code._text) {
+                            it('Each entry should have the code attribute of the code tag set to the proper code', function() {
+                                expect(code.code).to.be.equal(insuranceType.Code._text, 'The code attribute of the code tag is incorrect');
+                            });
+                            it('Each entry should have the displayName attribute of the code tag set to the proper displayName', function() {
+                                expect(code.displayName).to.be.equal(insuranceType.Description._text, 'The displayName attribute of the code tag is incorrect');
+                            });
+                            it('Each entry should have the codeSystemName attribute of the code tag set to the proper codeSystemName', function() {
+                                expect(code.codeSystemName).to.be.equal('X12N-1336', 'The codeSystemName attribute of the code tag is incorrect');
+                            });
+                            it('Each entry should have the codeSystem attribute of the code tag set to the proper codeSystem', function() {
+                                expect(code.codeSystem).to.be.equal('2.16.840.1.113883.6.255.1336', 'The codeSystem attribute of the code tag is incorrect');
+                            });
+                        } else {
+                            it('Each entry should have the nullFlavor attribute of the code tag set to NA', function() {
+                                expect(code.nullFlavor).to.be.equal('NA', 'The nullFlavor attribute of the code tag is incorrect');
+                            });
+                        }
+                    });
+                    describe('entry/act/entryRelationship/act/effectiveTime tag', function() {
                         it('Each entry should contain the effectiveTime/low tag', function() {
                             let lowTime = entry.act.entryRelationship.act.effectiveTime.low._attributes.value;
                             expect(lowTime).to.exist;
@@ -77,7 +108,7 @@ describe('CCD1.1', function () {
                         describe('assignedEntity/addr tag', function() {
                             let addr = entry.act.entryRelationship.act.performer.assignedEntity.addr;
                             it('Each entry should have text defined in the addr/streetAddressLine tag', function() {
-                                expect(addr.streetAddressLinie).to.exist;
+                                expect(addr.streetAddressLine).to.exist;
                             });
                             it('Each entry should have text defined in the addr/streetAddressLine tag', function() {
                                 expect(addr.city).to.exist;
@@ -90,13 +121,13 @@ describe('CCD1.1', function () {
                             });
                         });
                         it('Each entry should have the value attribute exist on the assignedEntity/telcom tag', function() {
-                            let telcom = entry.act.entryRelationship.act.performer.assignedEntity.telcom._attributes.value;
-                            expect(telcom).to.exist;
+                            let telecom = entry.act.entryRelationship.act.performer.assignedEntity.telecom._attributes.value;
+                            expect(telecom).to.exist;
                         });
                         describe('assignedEntity/representedOrganization tag', function() {
                             it('Each entry should have text defined in the representedOrganization/name tag', function() {
                                 let orgName = entry.act.entryRelationship.act.performer.assignedEntity.representedOrganization.name._text;
-                                expect(orgName).to.exist;
+                                expect(orgName).to.be.equal(groupNum);
                             });
                         });
                     });
@@ -107,38 +138,39 @@ describe('CCD1.1', function () {
                         });
                         describe('assignedAuthor/representedOrganization tag', function() {
                             let roid = entry.act.entryRelationship.act.author.assignedAuthor.representedOrganization.id._attributes;
-                            it('Each entry should have extension attribute of representedOrganization/id tag contain a number', function() {
-                                expect(roid.extension).to.exist;
+                            it('Each entry should have extension attribute of representedOrganization/id tag set to facilityNuber', function() {
+                                expect(roid.extension).to.be.equal(organizationName.Code._text);
                             });
-                            it('Each entry should have extension attribute of representedOrganization/id tag contain a number', function() {
+                            it('Each entry should have extension attribute of representedOrganization/id tag set to correct value', function() {
                                 expect(roid.root).to.be.equal('2.16.840.1.113883.4.349');
                             });
-                            it('Each entry should have extension attribute of representedOrganization/id tag contain a number', function() {
+                            it('Each entry should have extension attribute of representedOrganization/id tag set to facilityName', function() {
                                 let roname = entry.act.entryRelationship.act.author.assignedAuthor.representedOrganization.name._text;
-                                expect(roname).to.exist;
+                                expect(roname).to.be.equal(organizationName.Description._text);
                             });
                         });
                     });
                 });
-                describe('entry/act/entryRelationship/act/partisipant tag', function() {
-                    let pid = entry.act.entryRelationship.act.participant.participantRole.id._attributes;
-                    if(insuredRelationship == 'PATIENT') {
+                
+                let pid = entry.act.entryRelationship.act.participant.participantRole.id._attributes;
+                if(insuredRelationship == 'PATIENT') {
+                    describe('entry/act/entryRelationship/act/partisipant tag', function() {
                         it('Each entry with a partisipant whos relationship is PATIENT should have the extension attribute of the partisipant/id tag with the subscriber id', function() {                           
                             expect(pid.extension).to.be.equal(membershipNumber);
                         });
                         it('Each entry with a partisipant whos relationship is PATIENT should have the correct root attribute of the partisipant/id tag', function() {                           
                             expect(pid.root).to.be.equal('2.16.840.1.113883.4.349');
                         });
-                    } else {
+                    });
+                } else {
+                    describe('entry/act/entryRelationship/act/partisipant tag', function() {
                         it('Each entry with a partisipant whos relationship is not PATIENT should have the nullFlavor attribut of the partisipant/id tag equal to UNK', function() {
                             expect(pid.nullFlavor).to.be.equal('UNK');
                         });
-                    }
-                });
+                    });
+                }
+                
                 entryNum++;
-            });
-            it('should have at least one entry that has group number assigned in id tag', function () {
-                expect(exists).to.be.true;
             });
         });
     });
