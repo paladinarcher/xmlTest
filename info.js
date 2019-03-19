@@ -4,6 +4,8 @@ let components = testData.ClinicalDocument.component;
 let mappingSection = components[components.length-1].section;
 let payersSection = components[0].structuredBody.component[0].section;
 let allergySection = components[0].structuredBody.component[2].section;
+let fillerData = mappingSection.text.Container;
 
 console.log("data: ", mappingSection.text.Container.MemberEnrollments.MemberEnrollment[0].InsuredGroupOrPolicyNumber._text);
-console.log("dataDose: ", allergySection.templateId[1]);
+console.log("dataDose: ", allergySection.entry[0].act.author.assignedAuthor.id);
+console.log('dataTreze: ', fillerData.Encounters.Encounter[0].EnteredAt.Description._text);
