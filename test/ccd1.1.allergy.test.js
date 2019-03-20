@@ -47,7 +47,9 @@ describe('CCD1.1', function () {
         });
     }); // end of paragraph tag
 
+
     // ASSESSMENT TEXT TEST NEEDED
+
     
     describe('allergy problem act code', function() {
       it('should have the correct code attribute for the allergy problem act code', function(){
@@ -79,7 +81,9 @@ describe('CCD1.1', function () {
       });
     }); // End of allergy problem act status code
 
+
     // TEST NEEDED FOR allergy problem concern act effective time
+
 
     // Information Source for Allergy
     describe('Information Source for Allergy', function() {
@@ -168,9 +172,12 @@ describe('CCD1.1', function () {
         // have questions still need to work on this test
           // codeSystem
           // displayName
+
       }); // end of allergy observation code
 
+
       // Adverse Event Date ... Needs tests
+
 
       // Adverse Event Type ... Needs tests
 
@@ -188,20 +195,24 @@ describe('CCD1.1', function () {
         it('should have the correct code attribute for the product & product participantRole classCode', function(){
           let classCode = allergySection.entry[0].act.entryRelationship.observation.participant.participantRole._attributes.classCode;
           expect(classCode).to.be.equal('MANU', `The Product & Product participantRole classCode attribute classCode does not match!`);
-          });
+        });
 
           // classCode
           it('should have the correct code attribute for the product & product detail playingEntity classCode', function(){
             let classCode = allergySection.entry[0].act.entryRelationship.observation.participant.participantRole.playingEntity._attributes.classCode;
             expect(classCode).to.be.equal('MMAT', `The Product & Product code attribute playingEntity classCode does not match!`);
-            });
+          });
         }); // end of product & Product Detail
+
 
         // Test Needed for Allergen Product 
 
+
     }); // end of Information Source for Allergy
 
+
     // Test Needed for Product Free-Text
+
 
     // Reaction Observation
     describe('Reaction Observation', function() {
@@ -209,13 +220,13 @@ describe('CCD1.1', function () {
       it('should have the correct code attribute for the reaction observation code attribute inversionInd', function(){
         let inversionInd = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0]._attributes.inversionInd;
         expect(inversionInd).to.be.equal('true', `The reaction observation code attribute inversionInd  does not match!`);
-        });
+      });
 
       // typeCode
       it('should have the correct code attribute for the reaction observation code attribute typeCode', function(){
         let typeCode = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0]._attributes.typeCode;
         expect(typeCode).to.be.equal('MFST', `The reaction observation code attribute typeCode does not match!`);
-        });
+      });
 
       // templatedID root
       it('should have the correct code attribute for the reaction observation code attribute root', function(){
@@ -238,14 +249,19 @@ describe('CCD1.1', function () {
         it('should have the correct code attribute for the reaction observation code attribute code', function(){
           let code = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0].observation.code._attributes.code;
           expect(code).to.be.equal('ASSERTION', `The reaction observation code attribute code does not match!`);
-          });
+        });
 
         // codeSystem
+        it('should have the correct code attribute for the reaction observation code attribute codeSystem', function(){
+          let codeSystem = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0].observation.code._attributes.codeSystem;
+          expect(codeSystem).to.be.equal('2.16.840.1.113883.5.4', `The reaction observation code attribute codeSystem does not match!`);
+        });
 
         // codeSystemName
-
-
-
+        it('should have the correct code attribute for the reaction observation code attribute codeSystemName', function(){
+          let codeSystemName = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0].observation.code._attributes.codeSystemName;
+          expect(codeSystemName).to.be.equal('HL7ActCode', `The reaction observation code attribute codeSystemName does not match!`);
+        });
       });// end of code
 
     }); // end of Reaction Observation
