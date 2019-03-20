@@ -56,6 +56,7 @@ describe('CCD1.1', function () {
                 let membershipNumber = memberEnrollments[entryNum-1].HealthFund.MembershipNumber;
                 if(membershipNumber) { membershipNumber = membershipNumber._text; }
                 let insuranceType = memberEnrollments[entryNum-1].InsuranceTypeOrProductCode;
+                let insurancePlan = memberEnrollments[entryNum-1].HealthFund.HealthFundPlan;
                 let organizationName = memberEnrollments[entryNum-1].EnteredAt;
                 let statusCode = entry.act.statusCode._attributes.code;
                 let erid = entry.act.entryRelationship.act.id._attributes;
@@ -152,23 +153,100 @@ describe('CCD1.1', function () {
                     });
                 });
                 
-                let pid = entry.act.entryRelationship.act.participant.participantRole.id._attributes;
+                let pr = entry.act.entryRelationship.act.participant.participantRole;
+                let pid = pr.id._attributes;
                 if(insuredRelationship == 'PATIENT') {
-                    describe('entry/act/entryRelationship/act/partisipant tag', function() {
-                        it('Each entry with a partisipant whos relationship is PATIENT should have the extension attribute of the partisipant/id tag with the subscriber id', function() {                           
+                    describe('entry/act/entryRelationship/act/participant/participantRole tag', function() {
+                        it('Each entry with a participant whos relationship is PATIENT should have the extension attribute of the participantRole/id tag with the subscriber id', function() {                           
                             expect(pid.extension).to.be.equal(membershipNumber);
                         });
-                        it('Each entry with a partisipant whos relationship is PATIENT should have the correct root attribute of the partisipant/id tag', function() {                           
+                        it('Each entry with a participant whos relationship is PATIENT should have the correct root attribute of the participantRole/id tag', function() {                           
                             expect(pid.root).to.be.equal('2.16.840.1.113883.4.349');
+                        });
+                        it('Each entry withe a participant whos relationship is PATIENT should not have a addr tag', function() {
+                            expect(pr.addr).to.not.exist;
+                        });
+                        it('Each entry withe a participant whos relationship is PATIENT should not have a telecom tag', function() {
+                            expect(pr.telecom).to.not.exist;
+                        });
+                        it('Each entry withe a participant whos relationship is PATIENT should not have a name tag', function() {
+                            expect(pr.name).to.not.exist;
                         });
                     });
                 } else {
-                    describe('entry/act/entryRelationship/act/partisipant tag', function() {
-                        it('Each entry with a partisipant whos relationship is not PATIENT should have the nullFlavor attribut of the partisipant/id tag equal to UNK', function() {
+                    describe('entry/act/entryRelationship/act/participant/participantRole tag', function() {
+                        it('Each entry with a participant whos relationship is not PATIENT should have the nullFlavor attribut of the participantRole/id tag equal to UNK', function() {
                             expect(pid.nullFlavor).to.be.equal('UNK');
+                        });
+                        describe('participantRole/addr tag', function() {
+                            it('Each entry with participant whos relationship is not PATIENT should have the addr tag', function() {
+                                expect(pr.addr).to.exist;
+                            });
+                            if(pr.addr) {
+                                it('Each entry with participant whos relationship is not PATIENT should have the addr/streetAddressLine tag', function() {
+                                    expect(pr.addr.streetAddressLine).to.exist;
+                                });
+                                it('Each entry with participant whos relationship is not PATIENT should have the addr/city tag', function() {
+                                    expect(pr.addr.city).to.exist;
+                                });
+                                it('Each entry with participant whos relationship is not PATIENT should have the addr/state tag', function() {
+                                    expect(pr.addr.state).to.exist;
+                                });
+                                it('Each entry with participant whos relationship is not PATIENT should have the addr/postalCode tag', function() {
+                                    expect(pr.addr.postalCode).to.exist;
+                                });
+                            }
+                        });
+                        describe('participantRole/telecom tag', function() {
+                            it('Each entry with participant whos relationship is not PATIENT should have the telecom tag', function() {
+                                expect(pr.telecom).to.exist;
+                            });
+                            if(pr.telecom) {
+                                it('Each entry with participant whos relationship is not PATIENT should have the use attribute of the telecom tag set correctly', function() {
+                                    expect(pr.telecom._attributes.use).to.be.equal('HP');
+                                });
+                                it('Each entry with participant whos relationship is not PATIENT should have the value attribute of the telecom tag', function() {
+                                    expect(pr.telecom._attributes.value).to.exist;
+                                });
+                            }
+                        });
+                        describe('participantRole/name tag', function() {
+                            it('Each entry with participant whos relationship is not PATIENT should have the name tag', function() {
+                                expect(pr.name).to.exist;
+                            });
+                            if(pr.name) {
+                                it('Each entry with participant whos relationship is not PATIENT should have the name/prefix tag', function() {
+                                    expect(pr.name.prefix).to.exist;
+                                });
+                                it('Each entry with participant whos relationship is not PATIENT should have the name/given tag', function() {
+                                    expect(pr.name.given).to.exist;
+                                });
+                                it('Each entry with participant whos relationship is not PATIENT should have the name/family tag', function() {
+                                    expect(pr.name.family).to.exist;
+                                });
+                                it('Each entry with participant whos relationship is not PATIENT should have the name/suffix tag', function() {
+                                    expect(pr.name.suffix).to.exist;
+                                });
+                            }
                         });
                     });
                 }
+
+                describe('entry/act/entryRelationship/act/entryRelationship/act tag', function() {
+                    let act = entry.act.entryRelationship.act.entryRelationship.act;
+                    it('Each entry should have the extension attribute of the act/id tag with the plan number', function() {                     
+                        expect(act.id._attributes.extension).to.be.equal(insurancePlan.Description._text);
+                    });
+                    it('Each entry should have the correct root attribute of the act/id tag', function() {                           
+                        expect(act.id._attributes.root).to.be.equal('2.16.840.1.113883.4.349');
+                    });
+                    it('Each entry should have the correct nullFlavor attribute of the act/code tag', function() {                           
+                        expect(act.code._attributes.nullFlavor).to.be.equal('NA');
+                    });
+                    it('Each entry should have the act/text tag to have the plan name', function() {                           
+                        expect(act.text._text).to.be.equal(insurancePlan.Description._text);
+                    });
+                });
                 
                 entryNum++;
             });
