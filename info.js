@@ -9,3 +9,15 @@ let fillerData = mappingSection.text.Container;
 console.log("data: ", mappingSection.text.Container.MemberEnrollments.MemberEnrollment[0].InsuredGroupOrPolicyNumber._text);
 console.log("dataDose: ", allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0]);
 //console.log('dataTreze: ', fillerData.Encounters.Encounter[0].EnteredAt.Description._text);
+
+let entryNum = 1;
+let entryArray = new Array();
+payersSection.entry.forEach(function(entry) {
+    let lowTime = entry.act.entryRelationship.act.effectiveTime.low._attributes.value;
+    let highTime = entry.act.entryRelationship.act.effectiveTime.high._attributes.value;
+
+    entryArray[entryNum] = [lowTime,highTime];
+    entryNum++;
+});
+
+console.log("data: ", entryArray);
