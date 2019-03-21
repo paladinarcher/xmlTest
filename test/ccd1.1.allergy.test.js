@@ -266,8 +266,77 @@ describe('CCD1.1', function () {
 
     }); // end of Reaction Observation
 
-  });
-});
+    describe('severtiy Free-text', function(){
+
+      // Needs test SDA Mappings
+
+      it('Should have the code attribute for the severity Free-test allergy statusCode', function(){
+        let statusCode = allergySection.entry[0].act.entryRelationship.observation.entryRelationship[0].observation.statusCode._attributes.code;
+          expect(statusCode).to.be.equal('completed', `The severity Free-test allergy statusCode attribute code does not match!`);
+      });
+
+      // Needs test Severity Coded
+
+      // Needs test No Known Allergy Entry
+
+      // allergy template id
+      describe('allergy template id', function(){
+        it('Should have the code attribute for the allergy template id', function(){
+          let root = allergySection.entry[1].act.templateId._attributes.root;
+            expect(root).to.be.equal('2.16.840.1.113883.10.20.22.4.30', `The allergy template id attribute code does not match!`);
+        });
+      });  
+      // allergy concern act id
+      describe('allergy concern act id', function(){
+        it('Should have the code attribute for the allergy concern act id', function(){
+          let id = allergySection.entry[1].act.id._attributes.nullFlavor;
+            expect(id).to.be.equal('NA', `The allergy concern act id attribute code does not match!`);
+        });
+      });  
+
+      // allergy concern act code
+      describe('allergy concern act code', function(){
+        // code
+        it('Should have the code attribute for the allergy concern act code', function(){
+          let code = allergySection.entry[1].act.code._attributes.code;
+            expect(code).to.be.equal('CONC', `The allergy concern act code attribute code does not match!`);
+        });
+        // codeSystem
+        it('Should have the code attribute for the allergy concern act codeSystem', function(){
+          let codeSystem = allergySection.entry[1].act.code._attributes.codeSystem;
+            expect(codeSystem).to.be.equal('2.16.840.1.113883.5.6', `The allergy concern act code attribute codeSystem does not match!`);
+        });
+        // codeSystemName
+        it('Should have the code attribute for the allergy concern act displayName', function(){
+          let displayName = allergySection.entry[1].act.code._attributes.displayName;
+            expect(displayName).to.be.equal('Concern', `The allergy concern act code attribute displayName does not match!`);
+        });
+      }); // end of allergy concern act code  
+
+      // // allergy concern act status code 
+      // describe('allergy concern act code', function(){
+      //   // code
+      //   it('Should have the code attribute for the allergy concern act status code ', function(){
+      //     let code = allergySection.entry[1].act.code._attributes.code;
+      //       expect(code).to.be.equal('CONC', `The allergy concern act status code attribute code does not match!`);
+      //   });
+      //   // codeSystem
+      //   it('Should have the code attribute for the allergy concern act status code System', function(){
+      //     let codeSystem = allergySection.entry[1].act.code._attributes.codeSystem;
+      //       expect(codeSystem).to.be.equal('2.16.840.1.113883.5.6', `The allergy concern act status code attribute codeSystem does not match!`);
+      //   });
+      //   // codeSystemName
+      //   it('Should have the code attribute for the allergy concern act displayName', function(){
+      //     let displayName = allergySection.entry[1].act.code._attributes.displayName;
+      //       expect(displayName).to.be.equal('Concern', `The allergy concern act status code attribute displayName does not match!`);
+      //   });
+      // }); // end of allergy concern act status code 
+
+    }); // end of severity Free-text
+
+
+  }); // end of allergySection
+}); // end of CCD1.1
 
 
 
